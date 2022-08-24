@@ -21,6 +21,7 @@ const ImageManagmentButtons = () => {
 
             <div className="col text-center">
                 <button type="button"
+                        onClick={netContext.rollbackFile}
                         className="btn btn-outline-secondary m-0 btn-circle-img">
                     <img className="rounded mx-auto d-block img-fluid"
                          src={refresh}
@@ -30,10 +31,11 @@ const ImageManagmentButtons = () => {
 
             <div className="col text-center">
                 <button type="button"
+                        onClick={netContext.changeModel}
                         className="btn btn-outline-secondary m-0 rounded-pill px-4">
                     <i className="fa fa-cloud-upload mr-2 text-muted"/>
                     <small className="text-uppercase font-weight-bold">
-                        model
+                        {netContext.model}
                     </small>
                 </button>
             </div>
