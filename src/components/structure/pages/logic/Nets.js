@@ -1,13 +1,16 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import FileInputForm from "./fileInputElements/FileInputForm";
 import NetContext from '../../../context/NetContext';
 import models from '../../../../util/netModels.json';
+import UploadImage from "../../../../service/run.service";
+import ModalContext from "../../../context/ModalContext";
+import ModalInfo from "../../modal/ModalInfo";
 
 const Nets = () => {
 
     const [currentFileURL, setCurrentFileURL] = useState("");
 
-    const [currentSelectedFile, setCurrentSelectedFile] = useState();
+    const [currentSelectedFile, setCurrentSelectedFile] = useState(null);
     const [currentSelectedFileURL, setCurrentSelectedFileURL] = useState("");
     const [currentSelectedFileName, setCurrentSelectedFileName] = useState("");
 
@@ -42,11 +45,26 @@ const Nets = () => {
         }
     };
 
-    const changeModel= () => {
+    const changeModel = () => {
         for (let i = 0; i < models.length; ++i)
             if(models[i].label === model)
                 setModel(models[(i + 1) % models.length].label)
     };
+
+    const modalContext = useContext(ModalContext);
+
+    const evaluate = () => {
+        if(currentSelectedFile)
+            UploadImage(currentSelectedFile, String(model))
+                .then((response) => {
+                    const url = URL.createObjectURL(response.data);
+                    setCurrentFileURL(url);
+                    setCurrentScannedFileURL(url);})
+                .catch((err) => {
+                    modalContext.setInfoMess(['Something went wrong', err.message]);
+                    modalContext.handleShowModalInfo();
+                });
+    }
 
     return (
         <NetContext.Provider value={{
@@ -56,8 +74,10 @@ const Nets = () => {
             clearFile : clearFile,
             rollbackFile : rollbackFile,
             changeModel : changeModel,
+            evaluate : evaluate,
             model : model
         }}>
+            <ModalInfo/>
             <FileInputForm/>
         </NetContext.Provider>
     );

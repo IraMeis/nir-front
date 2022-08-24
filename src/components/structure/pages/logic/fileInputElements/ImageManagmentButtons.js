@@ -42,6 +42,7 @@ const ImageManagmentButtons = () => {
 
             <div className="col text-center">
                 <button type="button"
+                        onClick={netContext.evaluate}
                         className="btn btn-outline-warning btn-circle-img btn-circle-img-start">
                     <img className="rounded mx-auto d-block img-fluid"
                          src={start}

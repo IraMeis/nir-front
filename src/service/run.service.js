@@ -4,12 +4,13 @@ import api from "../util/apiList.json";
 
 const API_URL = bask.server + api.run;
 
-const UploadImage = (file, net) => {
+const UploadImage = (file, netName) => {
     let formData = new FormData();
     formData.append("image", file);
-    return axios.post(API_URL + '/' + net, formData, {
+    return axios.post(API_URL + '/' + netName, formData, {
+        responseType: 'blob',
         headers: {
-            "Content-Type": "multipart/form-data"
+            'Content-Type': 'image/jpeg'
         }
     });
 };
