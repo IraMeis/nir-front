@@ -1,24 +1,44 @@
 import React, {useState} from "react";
-import FileInputForm from "./FileInputForm";
+import FileInputForm from "./fileInputElements/FileInputForm";
+import NetContext from '../../../context/NetContext';
 
 const Nets = () => {
 
-    const [currentFile, setCurrentFile] = useState();
-    const [currentFileURL, setCurrentFileURL] = useState();
-    const [currentFileName, setCurrentFileName] = useState("");
+    const [currentFileURL, setCurrentFileURL] = useState("");
+
+    const [currentSelectedFile, setCurrentSelectedFile] = useState();
+    const [currentSelectedFileURL, setCurrentSelectedFileURL] = useState("");
+    const [currentSelectedFileName, setCurrentSelectedFileName] = useState("");
+
+    const [currentScannedFileURL, setCurrentScannedFileURL] = useState("");
 
     const selectFile = (event) => {
         const file = event.target.files[0];
         const url = URL.createObjectURL(file);
+        setCurrentScannedFileURL("");
         setCurrentFileURL(url);
-        setCurrentFile(file);
-        setCurrentFileName(file.name);
+        setCurrentSelectedFileURL(url);
+        setCurrentSelectedFile(file);
+        setCurrentSelectedFileName(file.name);
+    };
+
+    const clearFile = () => {
+        setCurrentScannedFileURL("");
+        setCurrentFileURL("");
+        setCurrentSelectedFileURL("");
+        setCurrentSelectedFile(null);
+        setCurrentSelectedFileName("");
     };
 
     return (
-        <FileInputForm selectFile={selectFile}
-                       fileUrl={currentFileURL}
-                       fileName={currentFileName}/>
+        <NetContext.Provider value={{
+            currentFileURL : currentFileURL,
+            currentSelectedFileName : currentSelectedFileName,
+            selectFile : selectFile,
+            clearFile : clearFile
+        }}>
+            <FileInputForm/>
+        </NetContext.Provider>
     );
 };
 export default Nets;
