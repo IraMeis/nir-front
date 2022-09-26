@@ -1,3 +1,4 @@
 {
-  "server": "http://localhost:5000"
+  "serverIMG": "http://localhost:5000",
+  "serverVI": "http://localhost:5001"
 }

@@ -29,10 +29,26 @@ body {
 }
 
 .image-area::before {
-  content: 'Uploaded image result';
+  content: 'Uploaded file';
   color: #F90;
   font-weight: bold;
   text-transform: uppercase;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+  z-index: 1;
+}
+
+.video-area {
+  border: 1px dashed #F90;
+  padding: 1rem;
+  position: relative;
+}
+
+.video-area::before {
+  color: #F90;
   position: absolute;
   top: 50%;
   left: 50%;

@@ -2,7 +2,8 @@ import React, {useContext, useState} from "react";
 import FileInputForm from "./fileInputElements/FileInputForm";
 import NetContext from '../../../context/NetContext';
 import models from '../../../../util/netModels.json';
-import UploadImage from "../../../../service/run.service";
+import fileT from '../../../../util/fileType.json';
+import UploadService from "../../../../service/run.service";
 import ModalContext from "../../../context/ModalContext";
 import ModalInfo from "../../modal/ModalInfo";
 
@@ -17,10 +18,24 @@ const Nets = () => {
     const [currentScannedFileURL, setCurrentScannedFileURL] = useState("");
 
     const [model, setModel] = useState(models[0].label);
+    const [fileType, setFileType] = useState(fileT.none)
+
+    const videos = ["mp4", "m4p", "m4v", "mpg", "mpeg", "mp2", "mpe", "mpv",
+        "3gp", "ogg", "webm", "avi", "wmv", "mkv", "mov", "webm", "flv"]
+    const images = ["jpg", "gif", "png", "jpeg", "webp","raw", "tiff", "bmp", "psd"]
 
     const selectFile = (event) => {
         const file = event.target.files[0];
         const url = URL.createObjectURL(file);
+
+        const end = String(file.name).split(".").pop().toLowerCase();
+        if(videos.indexOf(end) !== -1)
+            setFileType(fileT.video)
+        else if (images.indexOf(end) !== -1)
+            setFileType(fileT.image)
+        else
+            setFileType(fileT.other)
+
         setCurrentScannedFileURL("");
         setCurrentFileURL(url);
         setCurrentSelectedFileURL(url);
@@ -29,6 +44,7 @@ const Nets = () => {
     };
 
     const clearFile = () => {
+        setFileType(fileT.none)
         setCurrentScannedFileURL("");
         setCurrentFileURL("");
         setCurrentSelectedFileURL("");
@@ -55,15 +71,28 @@ const Nets = () => {
 
     const evaluate = () => {
         if(currentSelectedFile)
-            UploadImage(currentSelectedFile, String(model))
-                .then((response) => {
-                    const url = URL.createObjectURL(response.data);
-                    setCurrentFileURL(url);
-                    setCurrentScannedFileURL(url);})
-                .catch((err) => {
-                    modalContext.setInfoMess(['Something went wrong', err.message]);
-                    modalContext.handleShowModalInfo();
-                });
+            if(fileType === fileT.video)
+                UploadService.uploadVideo(currentSelectedFile, String(model))
+                    .then((response) => {
+                        const url = URL.createObjectURL(response.data);
+                        setCurrentFileURL(url);
+                        setCurrentScannedFileURL(url);
+                    })
+                    .catch((err) => {
+                        modalContext.setInfoMess(['Something went wrong', err.message]);
+                        modalContext.handleShowModalInfo();
+                    });
+            else if (fileType === fileT.image)
+                UploadService.uploadImage(currentSelectedFile, String(model))
+                    .then((response) => {
+                        const url = URL.createObjectURL(response.data);
+                        setCurrentFileURL(url);
+                        setCurrentScannedFileURL(url);
+                    })
+                    .catch((err) => {
+                        modalContext.setInfoMess(['Something went wrong', err.message]);
+                        modalContext.handleShowModalInfo();
+                    });
     }
 
     return (
@@ -75,7 +104,8 @@ const Nets = () => {
             rollbackFile : rollbackFile,
             changeModel : changeModel,
             evaluate : evaluate,
-            model : model
+            model : model,
+            fileType : fileType
         }}>
             <ModalInfo/>
             <FileInputForm/>
