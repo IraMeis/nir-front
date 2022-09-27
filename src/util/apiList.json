@@ -1,3 +1,4 @@
 {
-  "run" : "/api/nets/run"
+  "run" : "/api/nets/run",
+  "eval" : "/api/nets/eval"
 }

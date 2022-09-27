@@ -9,6 +9,8 @@ import ModalInfo from "../../modal/ModalInfo";
 
 const Nets = () => {
 
+    const regexExp = /[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}/;
+
     const [currentFileURL, setCurrentFileURL] = useState("");
 
     const [currentSelectedFile, setCurrentSelectedFile] = useState(null);
@@ -16,6 +18,8 @@ const Nets = () => {
     const [currentSelectedFileName, setCurrentSelectedFileName] = useState("");
 
     const [currentScannedFileURL, setCurrentScannedFileURL] = useState("");
+    const [currentScannedFileUUID, setCurrentScannedFileUUID] = useState("");
+    const [currentScannedFileEVAL, setCurrentScannedFileEVAL] = useState(null);
 
     const [model, setModel] = useState(models[0].label);
     const [fileType, setFileType] = useState(fileT.none)
@@ -41,6 +45,8 @@ const Nets = () => {
         setCurrentSelectedFileURL(url);
         setCurrentSelectedFile(file);
         setCurrentSelectedFileName(file.name);
+        setCurrentScannedFileUUID("");
+        setCurrentScannedFileEVAL(null);
     };
 
     const clearFile = () => {
@@ -50,6 +56,8 @@ const Nets = () => {
         setCurrentSelectedFileURL("");
         setCurrentSelectedFile(null);
         setCurrentSelectedFileName("");
+        setCurrentScannedFileUUID("");
+        setCurrentScannedFileEVAL(null);
     };
 
     const rollbackFile = () => {
@@ -75,8 +83,14 @@ const Nets = () => {
                 UploadService.uploadVideo(currentSelectedFile, String(model))
                     .then((response) => {
                         const url = URL.createObjectURL(response.data);
+                        const uuid = response.headers["content-disposition"].match(regexExp)[0];
+                        setCurrentScannedFileUUID(uuid);
                         setCurrentFileURL(url);
                         setCurrentScannedFileURL(url);
+                        UploadService.getAdditionalDataVideo(uuid)
+                            .then((response) => {
+                                setCurrentScannedFileEVAL(response.data);
+                            })
                     })
                     .catch((err) => {
                         modalContext.setInfoMess(['Something went wrong', err.message]);
@@ -105,7 +119,8 @@ const Nets = () => {
             changeModel : changeModel,
             evaluate : evaluate,
             model : model,
-            fileType : fileType
+            fileType : fileType,
+            currentScannedFileEVAL : currentScannedFileEVAL
         }}>
             <ModalInfo/>
             <FileInputForm/>

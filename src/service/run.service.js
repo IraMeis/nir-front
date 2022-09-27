@@ -4,6 +4,7 @@ import api from "../util/apiList.json";
 
 const API_URL_IMG = bask.serverIMG + api.run;
 const API_URL_VI = bask.serverVI + api.run;
+const API_URL_VI_EVAL = bask.serverVI + api.eval;
 
 const uploadImage = (file, netName) => {
     let formData = new FormData();
@@ -27,9 +28,14 @@ const uploadVideo = (file, netName) => {
     });
 };
 
+const getAdditionalDataVideo = (uuid) => {
+    return axios.get(API_URL_VI_EVAL + '/' + uuid);
+};
+
 const UploadService = {
-  uploadVideo,
-  uploadImage
+    uploadVideo,
+    uploadImage,
+    getAdditionalDataVideo
 };
 
 export default UploadService;
