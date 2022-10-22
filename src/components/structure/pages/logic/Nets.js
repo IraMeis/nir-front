@@ -83,10 +83,14 @@ const Nets = () => {
                 UploadService.uploadVideo(currentSelectedFile, String(model))
                     .then((response) => {
                         const url = URL.createObjectURL(response.data);
-                        const uuid = response.headers["content-disposition"].match(regexExp)[0];
+
+                        const uuid = response.headers["content-disposition"] &&
+                            response.headers["content-disposition"].match(regexExp)[0];
                         setCurrentScannedFileUUID(uuid);
                         setCurrentFileURL(url);
                         setCurrentScannedFileURL(url);
+
+                        if(uuid)
                         UploadService.getAdditionalDataVideo(uuid)
                             .then((response) => {
                                 setCurrentScannedFileEVAL(response.data);
