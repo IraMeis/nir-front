@@ -22,7 +22,7 @@ const Nets = () => {
     const [currentScannedFileEVAL, setCurrentScannedFileEVAL] = useState(null);
 
     const [model, setModel] = useState(models[0].label);
-    const [fileType, setFileType] = useState(fileT.none)
+    const [fileType, setFileType] = useState(fileT.image)
 
     const videos = ["mp4", "m4p", "m4v", "mpg", "mpeg", "mp2", "mpe", "mpv",
         "3gp", "ogg", "webm", "avi", "wmv", "mkv", "mov", "webm", "flv"]
@@ -50,7 +50,7 @@ const Nets = () => {
     };
 
     const clearFile = () => {
-        setFileType(fileT.none)
+        setFileType(fileT.image)
         setCurrentScannedFileURL("");
         setCurrentFileURL("");
         setCurrentSelectedFileURL("");
@@ -79,7 +79,8 @@ const Nets = () => {
 
     const evaluate = () => {
         if(currentSelectedFile)
-            if(fileType === fileT.video)
+            if(fileType === fileT.video) {
+                setFileType(fileT.wait);
                 UploadService.uploadVideo(currentSelectedFile, String(model))
                     .then((response) => {
                         const url = URL.createObjectURL(response.data);
@@ -89,17 +90,19 @@ const Nets = () => {
                         setCurrentScannedFileUUID(uuid);
                         setCurrentFileURL(url);
                         setCurrentScannedFileURL(url);
+                        setFileType(fileT.video);
 
-                        if(uuid)
-                        UploadService.getAdditionalDataVideo(uuid)
-                            .then((response) => {
-                                setCurrentScannedFileEVAL(response.data);
-                            })
+                        if (uuid)
+                            UploadService.getAdditionalDataVideo(uuid)
+                                .then((response) => {
+                                    setCurrentScannedFileEVAL(response.data);
+                                })
                     })
                     .catch((err) => {
                         modalContext.setInfoMess(['Something went wrong', err.message]);
                         modalContext.handleShowModalInfo();
                     });
+            }
             else if (fileType === fileT.image)
                 UploadService.uploadImage(currentSelectedFile, String(model))
                     .then((response) => {

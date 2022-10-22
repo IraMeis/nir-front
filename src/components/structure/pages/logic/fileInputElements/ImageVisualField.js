@@ -5,7 +5,7 @@ import fileT from "../../../../../util/fileType.json";
 const ImageVisualField = () => {
   const netContext = useContext(NetContext);
   return (<div>
-      {netContext.fileType !== fileT.video &&
+      {netContext.fileType === fileT.image &&
           <div className="image-area mt-4">
               <img id="imageResult"
                    src={netContext.currentFileURL}

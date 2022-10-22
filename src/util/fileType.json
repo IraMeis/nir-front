@@ -1,6 +1,6 @@
 {
   "video" : "v",
   "image" : "i",
-  "other" : "o",
-  "none" : "n"
+  "wait" : "w",
+  "other" : "o"
 }
