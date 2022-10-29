@@ -2,9 +2,9 @@ import axios from "axios";
 import bask from "../util/back.json";
 import api from "../util/apiList.json";
 
-const API_URL_IMG = bask.serverIMG + api.run;
-const API_URL_VI = bask.serverVI + api.run;
-const API_URL_VI_EVAL = bask.serverVI + api.eval;
+const API_URL_IMG = bask.serverIMG + api.runIMG;
+const API_URL_VI = bask.serverVI + api.runVI;
+const API_URL_VI_EVAL = bask.serverVI + api.evalVI;
 
 const uploadImage = (file, netName) => {
     let formData = new FormData();

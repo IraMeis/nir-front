@@ -1,4 +1,5 @@
 {
-  "run" : "/api/nets/run",
-  "eval" : "/api/nets/eval"
+  "runIMG" : "/api/image/run",
+  "runVI" : "/api/video/run",
+  "evalVI" : "/api/video/eval"
 }
