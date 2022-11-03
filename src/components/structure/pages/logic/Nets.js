@@ -25,7 +25,7 @@ const Nets = () => {
     const [fileType, setFileType] = useState(fileT.image)
 
     const videos = ["mp4", "m4p", "m4v", "mpg", "mpeg", "mp2", "mpe", "mpv",
-        "3gp", "ogg", "webm", "avi", "wmv", "mkv", "mov", "webm", "flv"]
+        "3gp", "ogg", "webm", "avi", "wmv", "mkv", "mov", "flv"]
     const images = ["jpg", "gif", "png", "jpeg", "webp","raw", "tiff", "bmp", "psd"]
 
     const selectFile = (event) => {
@@ -78,8 +78,9 @@ const Nets = () => {
     const modalContext = useContext(ModalContext);
 
     const evaluate = () => {
-        if(currentSelectedFile)
-            if(fileType === fileT.video) {
+        if(currentSelectedFile) {
+            setCurrentScannedFileEVAL(null);
+            if (fileType === fileT.video) {
                 setFileType(fileT.wait);
                 UploadService.uploadVideo(currentSelectedFile, String(model))
                     .then((response) => {
@@ -99,11 +100,13 @@ const Nets = () => {
                                 })
                     })
                     .catch((err) => {
+                        setFileType(fileT.video);
+                        console.log(err);
                         modalContext.setInfoMess(['Something went wrong', err.message]);
                         modalContext.handleShowModalInfo();
                     });
-            }
-            else if (fileType === fileT.image)
+            } else if (fileType === fileT.image) {
+                setFileType(fileT.wait);
                 UploadService.uploadImage(currentSelectedFile, String(model))
                     .then((response) => {
                         const url = URL.createObjectURL(response.data);
@@ -111,9 +114,18 @@ const Nets = () => {
                         setCurrentScannedFileURL(url);
                     })
                     .catch((err) => {
+                        setFileType(fileT.image);
+                        console.log(err);
                         modalContext.setInfoMess(['Something went wrong', err.message]);
                         modalContext.handleShowModalInfo();
                     });
+            }
+            else if (fileType === fileT.wait) {
+                modalContext.setInfoMess(['Your request was received by the server',
+                    "Clicking on this button won't speed up processing of the request"]);
+                modalContext.handleShowModalInfo();
+            }
+        }
     }
 
     return (
