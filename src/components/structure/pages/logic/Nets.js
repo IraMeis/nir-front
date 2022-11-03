@@ -121,7 +121,7 @@ const Nets = () => {
                     });
             }
             else if (fileType === fileT.wait) {
-                modalContext.setInfoMess(['Your request was received by the server',
+                modalContext.setInfoMess(['Your request has been sent',
                     "Clicking on this button won't speed up processing of the request"]);
                 modalContext.handleShowModalInfo();
             }
