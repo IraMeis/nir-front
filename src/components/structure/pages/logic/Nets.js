@@ -112,6 +112,7 @@ const Nets = () => {
                         const url = URL.createObjectURL(response.data);
                         setCurrentFileURL(url);
                         setCurrentScannedFileURL(url);
+                        setFileType(fileT.image);
                     })
                     .catch((err) => {
                         setFileType(fileT.image);
