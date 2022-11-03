@@ -109,10 +109,10 @@ const Nets = () => {
                 setFileType(fileT.wait);
                 UploadService.uploadImage(currentSelectedFile, String(model))
                     .then((response) => {
+                        setFileType(fileT.image);
                         const url = URL.createObjectURL(response.data);
                         setCurrentFileURL(url);
                         setCurrentScannedFileURL(url);
-                        setFileType(fileT.image);
                     })
                     .catch((err) => {
                         setFileType(fileT.image);
