@@ -83,10 +83,19 @@ const Matmod = () => {
 
     const handleChangeIsEnabled = () => {
         if(isEnabled){
-            // todo request clear model
-            setIsEnabled(false)
-            setIsRunning(false)
-            setTotalAmount(0)
+            MatmodService.stop()
+                .then(() => {
+                    setIsEnabled(false)
+                    setIsRunning(false)
+                    setImages([])
+                    setImagesInitFiles([])
+                    setTotalAmount(0)
+                })
+                .catch((err) => {
+                    console.log(err);
+                    modalContext.setInfoMess(['Something went wrong', err.message]);
+                    modalContext.handleShowModalInfo();
+                });
         }
         else {
             let formData = new FormData();

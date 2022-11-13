@@ -24,10 +24,15 @@ const playPause = () => {
     return axios.post(API_SERVER + '/pp');
 };
 
+const stop = () => {
+    return axios.post(API_SERVER + '/stop');
+};
+
 const MatmodService = {
     getImages,
     newSystem,
-    playPause
+    playPause,
+    stop
 };
 
 export default MatmodService;
