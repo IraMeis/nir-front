@@ -9,8 +9,7 @@ const ModalInfo = () => {
 
     return (
         <Modal show={modalContext.modalState === modals.infoOpen}
-               onHide={modalContext.handleClose}
-               backdrop="static">
+               onHide={modalContext.handleClose}>
 
             <Modal.Header>
                 <Modal.Title>

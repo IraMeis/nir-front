@@ -1,4 +1,5 @@
 {
   "serverIMG": "http://localhost:5005",
-  "serverVI": "http://localhost:5001"
+  "serverVI": "http://localhost:5001",
+  "serverMatmod": "http://localhost:5099"
 }
