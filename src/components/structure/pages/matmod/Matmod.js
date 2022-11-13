@@ -2,7 +2,6 @@ import React, {useContext, useState} from 'react'
 import { useInterval } from 'usehooks-ts'
 import ModalContext from "../../../context/ModalContext";
 import ModalInfo from "../../modal/ModalInfo";
-import back from "../../../../util/back.json";
 import axios from "axios";
 import MatmodService from "../../../../service/matmod.service";
 import MatmodContext from "../../../context/MatmodContext";
@@ -10,7 +9,6 @@ import MatmodFileInput from "./MatmodFileInput";
 import StartPlayDelay from "./StartPlayDelay";
 
 const Matmod = () => {
-    const API_SERVER = back.serverMatmod + "/api/matmod";
     const modalContext = useContext(ModalContext)
 
     // requests amount
@@ -72,9 +70,15 @@ const Matmod = () => {
     }
 
     const handleChangeIsRunning = () => {
-        // todo request pause|play model
-        if(isEnabled)
+        if(isEnabled){
+            MatmodService.playPause()
+                .catch((err) => {
+                    console.log(err);
+                    modalContext.setInfoMess(['Something went wrong', err.message]);
+                    modalContext.handleShowModalInfo();
+                });
             setIsRunning(!isRunning)
+        }
     }
 
     const handleChangeIsEnabled = () => {
@@ -90,13 +94,13 @@ const Matmod = () => {
             formData.append("As",[0.2, -0.1])
             formData.append("Ds", [2, 1])
             formData.append("matrix", [[0, -0.001], [0.001, 0]])
-            formData.append("It",0.1)
+            formData.append("It",0.075)
             formData.append("Ix", 1)
             formData.append("Iy", 1)
             imagesInitFiles.map((file, index) => {
                 formData.append(`${index}`, file)
             })
-            axios.post(API_SERVER + '/new', formData)
+            MatmodService.newSystem( formData)
                 .then(() => {
                     setIsEnabled(true)
                     setIsRunning(true)

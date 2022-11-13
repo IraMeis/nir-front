@@ -20,24 +20,14 @@ const newSystem = (fdata) => {
     return axios.post(API_SERVER + '/new', fdata);
 };
 
-// const uploadVideo = (file, netName) => {
-//     let formData = new FormData();
-//     formData.append("video", file);
-//     return axios.post(API_URL_VI + '/' + netName, formData, {
-//         responseType: 'blob',
-//         headers: {
-//             'Content-Type': 'video/mp4'
-//         }
-//     });
-// };
-//
-// const getAdditionalDataVideo = (uuid) => {
-//     return axios.get(API_URL_VI_EVAL + '/' + uuid);
-// };
+const playPause = () => {
+    return axios.post(API_SERVER + '/pp');
+};
 
 const MatmodService = {
     getImages,
-    newSystem
+    newSystem,
+    playPause
 };
 
 export default MatmodService;
