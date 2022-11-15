@@ -5,8 +5,8 @@ import ModalInfo from "../../modal/ModalInfo";
 import axios from "axios";
 import MatmodService from "../../../../service/matmod.service";
 import MatmodContext from "../../../context/MatmodContext";
-import MatmodFileInput from "./MatmodFileInput";
-import StartPlayDelay from "./StartPlayDelay";
+import NNParam from "./NNParam";
+import MainConfig from "./MainConfig";
 
 const Matmod = () => {
     const modalContext = useContext(ModalContext)
@@ -19,23 +19,41 @@ const Matmod = () => {
     const [isRunning, setIsRunning] = useState(false)
     // ability to continuation of getting evals
     const [isEnabled, setIsEnabled] = useState(false)
+
     // function as one of [r, g, b] on rgb image
     const [images, setImages] = useState([])
-    // init files
+
+    // init files t=0
     const [imagesInitFiles, setImagesInitFiles] = useState([])
 
+    // init files borders
+    const [textInitFilesBord, setTextInitFilesBord] = useState([])
+    const [isBord, setIsBord] = useState(false)
+
     // config
-    const [N, setN] = useState(1)
+    const [NN, setNN] = useState(2)
+    const [isNNSet, setIsNNSet] = useState(true)
+
+    // const [As, setAs] = useState('')
+    // const [Ds, setDs] = useState('')
+    // const [matrix, setMatrix] = useState('')
+    // const [It, setIt] = useState(0.055)
+    // const [Ix, setIx] = useState(1)
+    // const [Iy, setIy] = useState(1)
+
+    function getFuncNumber (){
+      return Math.floor((NN - 1) / 3 + 1)
+    }
 
     useInterval(
         () => {
             let req = []
-            for (let i = 0; i < N; ++i){
+            for (let i = 0; i < getFuncNumber(); ++i){
                 req.push(MatmodService.getImages(i))
             }
             axios.all(req).then(axios.spread((...responses) => {
                 let resp = []
-                for (let i = 0; i < N; ++i){
+                for (let i = 0; i < getFuncNumber(); ++i){
                     resp.push(URL.createObjectURL(responses[i].data))
                 }
                 setImages(resp)
@@ -61,6 +79,26 @@ const Matmod = () => {
         isRunning ? delay : null,
     )
 
+    const handleChangeIsBord = () => {
+        setIsBord(!isBord)
+    }
+
+    const handleChangeIsNNSet = () => {
+        if(!isEnabled) {
+            setIsNNSet(!isNNSet)
+            setImages([])
+            setImagesInitFiles([])
+        }
+    }
+
+    const handleChangeNN = (event) => {
+        const n = Number(event.target.value)
+        if(n < 2)
+            setNN(2)
+        else
+            setNN(Math.floor(n))
+    }
+
     const handleChangeDelay = (event) => {
         const dl = Number(event.target.value)
         if(dl < 500)
@@ -83,14 +121,12 @@ const Matmod = () => {
 
     const handleChangeIsEnabled = () => {
         if(isEnabled){
+            setIsEnabled(false)
+            setIsRunning(false)
+            setImages([])
+            setImagesInitFiles([])
+            setTotalAmount(0)
             MatmodService.stop()
-                .then(() => {
-                    setIsEnabled(false)
-                    setIsRunning(false)
-                    setImages([])
-                    setImagesInitFiles([])
-                    setTotalAmount(0)
-                })
                 .catch((err) => {
                     console.log(err);
                     modalContext.setInfoMess(['Something went wrong', err.message]);
@@ -100,10 +136,10 @@ const Matmod = () => {
         else {
             let formData = new FormData();
             formData.append("N", 2)
-            formData.append("As",[0.2, -0.1])
+            formData.append("As",[0.4, -0.3])
             formData.append("Ds", [2, 1])
-            formData.append("matrix", [[0, -0.001], [0.001, 0]])
-            formData.append("It",0.075)
+            formData.append("matrix", [[0, -0.02], [0.01, 0]])
+            formData.append("It",0.055)
             formData.append("Ix", 1)
             formData.append("Iy", 1)
             imagesInitFiles.map((file, index) => {
@@ -127,41 +163,35 @@ const Matmod = () => {
         setImagesInitFiles(Array.from(files))
     }
 
+    const selectInitFilesBord = (event) => {
+        const files = event.target.files;
+        setTextInitFilesBord(Array.from(files))
+    }
+
     return (
         <MatmodContext.Provider value={{
             selectInitFiles: selectInitFiles,
             imagesInitFiles: imagesInitFiles,
+            selectInitFilesBord: selectInitFilesBord,
+            textInitFilesBord: textInitFilesBord,
             handleChangeIsEnabled: handleChangeIsEnabled,
             handleChangeIsRunning: handleChangeIsRunning,
             handleChangeDelay: handleChangeDelay,
             isEnabled: isEnabled,
             isRunning: isRunning,
             totalAmount: totalAmount,
-            delay: delay
+            delay: delay,
+            isBord: isBord,
+            handleChangeIsBord: handleChangeIsBord,
+            NN: NN,
+            handleChangeNN: handleChangeNN,
+            isNNSet: isNNSet,
+            handleChangeIsNNSet: handleChangeIsNNSet,
+            images: images
         }}>
             <ModalInfo/>
-            <MatmodFileInput/>
-            <StartPlayDelay/>
-            {imagesInitFiles.map((imgSrc, index) => (
-                <div className="image-area-mm mt-4">
-                    <img id="imageResult"
-                         src={URL.createObjectURL(imgSrc)}
-                         key={index}
-                         alt=""
-                         width={800}
-                         className="img-fluid rounded shadow-sm mx-auto d-block"/>
-                </div>))
-            }
-            {images.map((imgSrc, index) => (
-                <div className="image-area-mm mt-4">
-                    <img id="imageResult"
-                         src={imgSrc}
-                         key={index}
-                         alt=""
-                        // width={800}
-                         className="img-fluid rounded shadow-sm mx-auto d-block"/>
-                </div>))
-            }
+            <NNParam/>
+            {isNNSet && <MainConfig/>}
         </MatmodContext.Provider>
     )
 }

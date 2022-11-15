@@ -21,7 +21,7 @@ const MatmodFileInput = () => {
                        className="btn btn-warning m-0 rounded-pill px-4">
                     <i className="fa fa-cloud-upload mr-2 text-muted"/>
                     <small className="text-uppercase font-weight-bold text-muted">
-                        Choose files
+                        Choose T = 0 files
                     </small>
                 </label>
             </div>
