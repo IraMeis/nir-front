@@ -34,15 +34,43 @@ const Matmod = () => {
     const [NN, setNN] = useState(2)
     const [isNNSet, setIsNNSet] = useState(true)
 
-    // const [As, setAs] = useState('')
-    // const [Ds, setDs] = useState('')
-    // const [matrix, setMatrix] = useState('')
-    // const [It, setIt] = useState(0.055)
-    // const [Ix, setIx] = useState(1)
-    // const [Iy, setIy] = useState(1)
+    const [As, setAs] = useState(getAs())
+    const [Ds, setDs] = useState(getDs())
+    const [matrix, setMatrix] = useState(getMartix())
+    const [It, setIt] = useState(0.055)
+    const [Ix, setIx] = useState(1)
+    const [Iy, setIy] = useState(1)
 
     function getFuncNumber (){
       return Math.floor((NN - 1) / 3 + 1)
+    }
+
+    function getMartix () {
+        let res = []
+        for (let i = 0; i < NN; ++i) {
+            let masi = []
+            for (let j = 0; j < NN; ++j) {
+                masi.push(j)
+            }
+            res.push(masi)
+        }
+        return res;
+    }
+
+    function getDs () {
+        let res = []
+        for (let i = 0; i < NN; ++i) {
+            res.push(i)
+        }
+        return res;
+    }
+
+    function getAs () {
+        let res = []
+        for (let i = 0; i < NN; ++i) {
+            res.push(i)
+        }
+        return res;
     }
 
     useInterval(
@@ -85,10 +113,39 @@ const Matmod = () => {
 
     const handleChangeIsNNSet = () => {
         if(!isEnabled) {
+            if(!isNNSet){
+                setDs(getDs)
+                setAs(getAs)
+                setMatrix(getMartix())
+            }
             setIsNNSet(!isNNSet)
             setImages([])
             setImagesInitFiles([])
         }
+    }
+
+    const handleChangeIt = (event) => {
+        const n = Number(event.target.value)
+        if(n < 0)
+            setIt(0.000001)
+        else
+            setIt(n)
+    }
+
+    const handleChangeIx = (event) => {
+        const n = Number(event.target.value)
+        if(n < 0)
+            setIx(0.000001)
+        else
+            setIx(n)
+    }
+
+    const handleChangeIy = (event) => {
+        const n = Number(event.target.value)
+        if(n < 0)
+            setIy(0.000001)
+        else
+            setIy(n)
     }
 
     const handleChangeNN = (event) => {
@@ -187,7 +244,19 @@ const Matmod = () => {
             handleChangeNN: handleChangeNN,
             isNNSet: isNNSet,
             handleChangeIsNNSet: handleChangeIsNNSet,
-            images: images
+            images: images,
+            As: As,
+            setAs: setAs,
+            Ds: Ds,
+            setDs: setDs,
+            matrix: matrix,
+            setMatrix: setMatrix,
+            It: It,
+            Ix: Ix,
+            Iy: Iy,
+            handleChangeIt: handleChangeIt,
+            handleChangeIx: handleChangeIx,
+            handleChangeIy: handleChangeIy
         }}>
             <ModalInfo/>
             <NNParam/>

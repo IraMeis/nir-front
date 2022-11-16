@@ -9,7 +9,7 @@ const NNParam = () => {
             <div className="col"/>
             <div className="col"/>
             <div className="col text-center">
-                <label><h5>{'Set NN'}</h5></label>
+                <label><h5>{'N:'}</h5></label>
                 <input
                     className="form-control"
                     type="number"
