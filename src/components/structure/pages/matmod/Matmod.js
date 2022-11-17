@@ -26,8 +26,8 @@ const Matmod = () => {
     // init files t=0
     const [imagesInitFiles, setImagesInitFiles] = useState([])
 
-    // init files borders
-    const [textInitFilesBord, setTextInitFilesBord] = useState([])
+    // init file for borders
+    const [textInitFileBord, setTextInitFileBord] = useState(null)
     const [isBord, setIsBord] = useState(false)
 
     // config
@@ -50,7 +50,12 @@ const Matmod = () => {
         for (let i = 0; i < NN; ++i) {
             let masi = []
             for (let j = 0; j < NN; ++j) {
-                masi.push(j)
+                if(i > j)
+                    masi.push(0.01)
+                else if(i < j)
+                    masi.push(-0.01)
+                else
+                    masi.push(0)
             }
             res.push(masi)
         }
@@ -60,15 +65,16 @@ const Matmod = () => {
     function getDs () {
         let res = []
         for (let i = 0; i < NN; ++i) {
-            res.push(i)
+            res.push(1)
         }
         return res;
     }
 
     function getAs () {
         let res = []
-        for (let i = 0; i < NN; ++i) {
-            res.push(i)
+        res.push(0.1)
+        for (let i = 1; i < NN; ++i) {
+            res.push(-0.1)
         }
         return res;
     }
@@ -121,6 +127,7 @@ const Matmod = () => {
             setIsNNSet(!isNNSet)
             setImages([])
             setImagesInitFiles([])
+            setTextInitFileBord(null)
         }
     }
 
@@ -182,6 +189,7 @@ const Matmod = () => {
             setIsRunning(false)
             setImages([])
             setImagesInitFiles([])
+            setTextInitFileBord(null)
             setTotalAmount(0)
             MatmodService.stop()
                 .catch((err) => {
@@ -192,17 +200,21 @@ const Matmod = () => {
         }
         else {
             let formData = new FormData();
-            formData.append("N", 2)
-            formData.append("As",[0.4, -0.3])
-            formData.append("Ds", [2, 1])
-            formData.append("matrix", [[0, -0.02], [0.01, 0]])
-            formData.append("It",0.055)
-            formData.append("Ix", 1)
-            formData.append("Iy", 1)
+            formData.append("N", NN)
+            formData.append("As",As)
+            formData.append("Ds", Ds)
+            formData.append("matrix", matrix)
+            formData.append("It",It)
+            formData.append("Ix", Ix)
+            formData.append("Iy", Iy)
+            formData.append("isBord", isBord ? '1' : '0')
             imagesInitFiles.map((file, index) => {
                 formData.append(`${index}`, file)
             })
-            MatmodService.newSystem( formData)
+            if(isBord) {
+                formData.append('borders', textInitFileBord)
+            }
+            MatmodService.newSystem(formData)
                 .then(() => {
                     setIsEnabled(true)
                     setIsRunning(true)
@@ -220,17 +232,17 @@ const Matmod = () => {
         setImagesInitFiles(Array.from(files))
     }
 
-    const selectInitFilesBord = (event) => {
-        const files = event.target.files;
-        setTextInitFilesBord(Array.from(files))
+    const selectInitFileBord = (event) => {
+        const file = event.target.files[0];
+        setTextInitFileBord(file)
     }
 
     return (
         <MatmodContext.Provider value={{
             selectInitFiles: selectInitFiles,
             imagesInitFiles: imagesInitFiles,
-            selectInitFilesBord: selectInitFilesBord,
-            textInitFilesBord: textInitFilesBord,
+            selectInitFileBord: selectInitFileBord,
+            textInitFileBord: textInitFileBord,
             handleChangeIsEnabled: handleChangeIsEnabled,
             handleChangeIsRunning: handleChangeIsRunning,
             handleChangeDelay: handleChangeDelay,

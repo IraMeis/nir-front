@@ -25,13 +25,12 @@ const MatmodBorderFileInput = () => {
                 <div className="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
                     <input id="upload"
                            type="file"
-                           onChange={matmod.selectInitFilesBord}
-                           className="form-control border-0"
-                           multiple/>
+                           onChange={matmod.selectInitFileBord}
+                           className="form-control border-0"/>
                     <label id="upload-label"
                            htmlFor="upload"
                            className="font-weight-light text-muted">
-                        <strong>{matmod.textInitFilesBord.length === 0 ? 'No files' : 'Files added'}</strong>
+                        <strong>{matmod.textInitFileBord === null ? 'No file' : 'File added'}</strong>
                     </label>
 
                     <div className="input-group-append">
@@ -39,7 +38,7 @@ const MatmodBorderFileInput = () => {
                                className="btn btn-warning m-0 rounded-pill px-4">
                             <i className="fa fa-cloud-upload mr-2 text-muted"/>
                             <small className="text-uppercase font-weight-bold text-muted">
-                                Choose border files
+                                Choose border file
                             </small>
                         </label>
                     </div>
