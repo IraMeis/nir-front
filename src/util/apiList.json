@@ -1,5 +1,0 @@
-{
-  "runIMG" : "/api/image/run",
-  "runVI" : "/api/video/run",
-  "evalVI" : "/api/video/eval"
-}
