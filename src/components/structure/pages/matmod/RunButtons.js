@@ -17,6 +17,8 @@ const RunButtons = () => {
         formData.append("K", chmmf.K)
         formData.append("isxlim", chmmf.isxlim ? '1' : '0')
         formData.append("isylim", chmmf.isylim ? '1' : '0')
+        formData.append('indt', chmmf.indt)
+        formData.append('indr', chmmf.indr)
         if(chmmf.isxlim) {
             formData.append('xlim', chmmf.xlim)
         }
