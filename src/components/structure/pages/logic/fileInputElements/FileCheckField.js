@@ -1,13 +1,37 @@
 import {useContext} from "react";
 import NetContext from "../../../../context/NetContext";
+import Constants from "../../../../../util/Constants";
+import fileT from "../../../../../util/fileType.json";
 
 const FileCheckField = () => {
     const netContext = useContext(NetContext);
+
+    const selectFile = (event) => {
+        event.preventDefault();
+        const file = event.target.files[0];
+        const url = URL.createObjectURL(file);
+
+        const end = String(file.name).split(".").pop().toLowerCase();
+        if(Constants.videos.indexOf(end) !== -1)
+            netContext.setFileType(fileT.video)
+        else if (Constants.images.indexOf(end) !== -1)
+            netContext.setFileType(fileT.image)
+        else
+            netContext.setFileType(fileT.other)
+
+        netContext.setCurrentScannedFileURL("");
+        netContext.setCurrentFileURL(url);
+        netContext.setCurrentSelectedFileURL(url);
+        netContext.setCurrentSelectedFile(file);
+        netContext.setCurrentSelectedFileName(file.name);
+        netContext.setCurrentScannedFileEVAL(null);
+    };
+
     return (
         <div className="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
             <input id="upload"
                    type="file"
-                   onChange={netContext.selectFile}
+                   onChange={selectFile}
                    className="form-control border-0"/>
             <label id="upload-label"
                    htmlFor="upload"
