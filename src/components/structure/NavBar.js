@@ -11,9 +11,9 @@ const NavBar = () => {
 
         <div className="navbar-nav mr-auto">
             <li className="nav-item">
-                <Link to={"/matmod"}
+                <Link to={"/chmmf"}
                       className="nav-link">
-                    M a t M o d
+                    C H M M F
                 </Link>
             </li>
         </div>
