@@ -20,7 +20,7 @@ const NNParam = () => {
                 <Separator.Separator1/>
                 <button type="button"
                         onClick={matmod.handleChangeIsNNSet}
-                        className="btn btn-outline-secondary m-0 rounded-pill px-4">
+                        className="btn btn-outline-secondary bg-white m-0 rounded-pill px-4">
                     <i className="fa fa-cloud-upload mr-2 text-muted"/>
                     <small className="text-uppercase font-weight-bold">
                         {matmod.isNNSet ?  'Reset' : 'Ok'}

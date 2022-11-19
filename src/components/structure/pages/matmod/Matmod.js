@@ -271,8 +271,10 @@ const Matmod = () => {
             handleChangeIy: handleChangeIy
         }}>
             <ModalInfo/>
-            <NNParam/>
-            {isNNSet && <MainConfig/>}
+            <div className={'jumbotron bg-light'}>
+                <NNParam/>
+                {isNNSet && <MainConfig/>}
+            </div>
         </MatmodContext.Provider>
     )
 }
