@@ -7,7 +7,7 @@ export default function ImageField() {
     return (
         <div>
             {chmmf.image && (
-                <div className="image-area-mm mt-4">
+                <div className=" mt-4">
                     <img id="imageResult"
                          src={URL.createObjectURL(chmmf.image)}
                          key={'ind832edje'}

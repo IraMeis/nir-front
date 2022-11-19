@@ -20,8 +20,7 @@ const Chmmf = () => {
     const [xlim, setXlim] = useState([0, 0])
     const [ylim, setYlim] = useState([0, 0])
 
-    const [indt, setIndt] = useState('')
-    const [indr, setIndr] = useState('')
+    const [ind, setInd] = useState('')
 
     return (
         <ChmmfContext.Provider value={{
@@ -36,8 +35,7 @@ const Chmmf = () => {
             ylim, setYlim,
             isxlim, setIsXlim,
             isylim, setIsYlim,
-            indr, setIndr,
-            indt, setIndt
+            ind, setInd
         }}>
             <ModalInfo/>
             <MainConfig/>

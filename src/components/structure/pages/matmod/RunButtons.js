@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import ChmmfContext from "../../../context/ChmmfContext";
 import ChmmfService from "../../../../service/chmmf.service";
 import ModalContext from "../../../context/ModalContext";
@@ -6,6 +6,8 @@ import ModalContext from "../../../context/ModalContext";
 const RunButtons = () => {
     const chmmf = useContext(ChmmfContext);
     const modalContext = useContext(ModalContext);
+
+    const [evalParam, setEvalParam] = useState('t')
 
     function makeFormData(){
         let formData = new FormData();
@@ -17,8 +19,7 @@ const RunButtons = () => {
         formData.append("K", chmmf.K)
         formData.append("isxlim", chmmf.isxlim ? '1' : '0')
         formData.append("isylim", chmmf.isylim ? '1' : '0')
-        formData.append('indt', chmmf.indt)
-        formData.append('indr', chmmf.indr)
+        formData.append('ind', chmmf.ind)
         if(chmmf.isxlim) {
             formData.append('xlim', chmmf.xlim)
         }
@@ -28,22 +29,10 @@ const RunButtons = () => {
         return formData;
     }
 
-    const handleEvalModelT = () => {
-        ChmmfService.evalT(makeFormData())
+    const handleEvalModel = () => {
+        ChmmfService.evalModel(makeFormData(), evalParam)
             .then((response) => {
                 console.log(response.data)
-                chmmf.setImage(response.data)
-            })
-            .catch((err) => {
-                console.log(err);
-                modalContext.setInfoMess(['Something went wrong', err.message]);
-                modalContext.handleShowModalInfo();
-            });
-    }
-
-    const handleEvalModelR = () => {
-        ChmmfService.evalR(makeFormData())
-            .then((response) => {
                 chmmf.setImage(response.data)
             })
             .catch((err) => {
@@ -56,44 +45,37 @@ const RunButtons = () => {
     return (
         <>
             <div className="row">
-                <div className="col text-center">
-                    <h5>Indexes by T:</h5>
+                <div className="col-md-2 text-center"/>
+                <div className="col-md-8 text-center">
+                    <h5>Indexes:</h5>
                     <input
                         className="form-control"
                         type="text"
-                        value={chmmf.indt}
+                        value={chmmf.ind}
                         onChange={(event) => {
-                            chmmf.setIndt(event.target.value)
+                            event.preventDefault()
+                            chmmf.setInd(event.target.value)
                         }}/>
                     <p/>
-                    <button type="button"
-                            onClick={handleEvalModelT}
-                            className="btn btn-outline-secondary m-0 rounded-pill px-4">
-                        <i className="fa fa-cloud-upload mr-2 text-muted"/>
-                        <small className="text-uppercase font-weight-bold">
-                            {'Eval by T'}
-                        </small>
-                    </button>
+                    <div className="btn-group" role="group" aria-label="Basic example">
+                        <button type="button"
+                                className="btn btn-secondary"
+                                onClick ={handleEvalModel}>
+                            Get dynamic by
+                        </button>
+                        <button type="button"
+                                className="btn btn-danger"
+                                onClick ={() => {
+                                    if(evalParam === 't')
+                                        setEvalParam('r')
+                                    else if(evalParam === 'r')
+                                        setEvalParam('t')
+                                }}>
+                            {evalParam.toUpperCase()}
+                        </button>
+                    </div>
                 </div>
-                <div className="col text-center">
-                    <h5>Indexes by R:</h5>
-                    <input
-                        className="form-control"
-                        type="text"
-                        value={chmmf.indr}
-                        onChange={(event) => {
-                            chmmf.setIndr(event.target.value)
-                        }}/>
-                    <p/>
-                    <button type="button"
-                            onClick={handleEvalModelR}
-                            className="btn btn-outline-secondary m-0 rounded-pill px-4">
-                        <i className="fa fa-cloud-upload mr-2 text-muted"/>
-                        <small className="text-uppercase font-weight-bold">
-                            {'Eval by R'}
-                        </small>
-                    </button>
-                </div>
+                <div className="col-md-2 text-center"/>
             </div>
 
         </>

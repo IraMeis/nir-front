@@ -6,7 +6,7 @@ import ImageField from "./ImageField";
 
 export default function MainConfig () {
     return (
-        <div className={'container'}>
+        <div className={'container jumbotron'}>
             <ModelParams/>
             <Separator.Separator1/>
             <Lims/>

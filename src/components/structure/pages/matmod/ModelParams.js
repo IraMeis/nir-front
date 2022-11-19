@@ -78,8 +78,8 @@ export default function ModelParams(){
             <Separator.Separator1/>
 
             <div className="row ">
-                <div className={'col'}/>
-                <div className={'col'}>
+                <div className={'col-md-2'}/>
+                <div className={'col-md-8'}>
                     <div className="row ">
                         <div className={'col'}>
                             <label><h5>{'I:'}</h5></label>
@@ -113,7 +113,7 @@ export default function ModelParams(){
                         </div>
                     </div>
                 </div>
-                <div className={'col'}/>
+                <div className={'col-md-2'}/>
             </div>
         </>
     );
