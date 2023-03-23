@@ -52,6 +52,7 @@ const ImageManagmentButtons = () => {
                         netContext.setCurrentFileURL(url);
                         netContext.setCurrentScannedFileURL(url);
                         netContext.setFileType(fileT.video);
+                        console.log(uuid)
 
                         if (uuid)
                             UploadService.getAdditionalDataVideo(uuid)
@@ -73,6 +74,15 @@ const ImageManagmentButtons = () => {
                         const url = URL.createObjectURL(response.data);
                         netContext.setCurrentFileURL(url);
                         netContext.setCurrentScannedFileURL(url);
+
+                        const name = response.headers["content-disposition"] &&
+                            response.headers["content-disposition"].match(Constants.imgName)[0];
+                        if (name)
+                            UploadService.getAdditionalDataImage(name)
+                                .then((response) => {
+                                    netContext.setCurrentScannedFileEVAL(response.data);
+                                })
+                        console.log(name)
                     })
                     .catch((err) => {
                         netContext.setFileType(fileT.image);
