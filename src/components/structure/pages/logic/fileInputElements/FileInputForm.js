@@ -2,9 +2,9 @@ import FileCheckField from "./FileCheckField";
 import ImageManagmentButtons from "./ImageManagmentButtons";
 import ImageVisualField from "./ImageVisualField";
 import VideoVisualField from "./VideoVisualField";
-import ResultEval from "./ResultEval";
 import Separator from "../../../Separator";
 import WaitVisualField from "./WaitVisualField";
+import EvalAndSave from "../eval/EvalAndSave";
 
 const FileInputForm = () => {
 
@@ -18,7 +18,7 @@ const FileInputForm = () => {
                     <ImageVisualField/>
                     <VideoVisualField/>
                     <Separator.Separator2/>
-                    <ResultEval/>
+                    <EvalAndSave/>
                 </div>
             </div>
         </div>

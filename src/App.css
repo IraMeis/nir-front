@@ -75,3 +75,8 @@ body {
 .btn-circle-img-start {
   padding: 5px;
 }
+
+.map-net{
+  height: 500px;
+  width: 500px;
+}

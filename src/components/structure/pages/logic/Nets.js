@@ -23,6 +23,22 @@ const Nets = () => {
 
     const [fileType, setFileType] = useState(fileT.image)
 
+    const [coords, setCords] = useState({
+        latitude: 39.7837304,
+        longitude: -100.4458825
+    });
+
+    // useEffect(() => {
+    //     navigator.geolocation.getCurrentPosition(
+    //         (position) => {
+    //             console.log("Lon:" + position.coords.longtitude);
+    //             setCords({
+    //                 latitude: position.coords.latitude,
+    //                 longitude: position.coords.longitude
+    //             });
+    //         }, [])
+    // });
+
     return (
         <NetContext.Provider value={{
             currentFileURL,
@@ -47,7 +63,10 @@ const Nets = () => {
             setModel,
 
             fileType,
-            setFileType
+            setFileType,
+
+            coords,
+            setCords
 
         }}>
             <ModalInfo/>
