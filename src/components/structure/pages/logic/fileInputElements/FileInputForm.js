@@ -10,8 +10,8 @@ const FileInputForm = () => {
 
     return (
         <div className="container">
-            <div className="row py-4">
-                <div className="col-lg-7 mx-auto">
+            <div className="row">
+                <div className="col-lg-8 mx-auto">
                     <FileCheckField/>
                     <ImageManagmentButtons/>
                     <WaitVisualField/>

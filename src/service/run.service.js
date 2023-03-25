@@ -6,6 +6,7 @@ const API_URL_IMG = bask.serverIMG + api.runIMG;
 const API_URL_VI = bask.serverVI + api.runVI;
 const API_URL_VI_EVAL = bask.serverVI + api.evalVI;
 const API_URL_IMG_EVAL = bask.serverIMG + api.evalIMG;
+const API_URL_SAVE = bask.serverIMG + api.save;
 
 const uploadImage = (file, netName) => {
     let formData = new FormData();
@@ -37,12 +38,16 @@ const getAdditionalDataImage = (uuid) => {
     return axios.get(API_URL_IMG_EVAL + '/' + uuid);
 };
 
+const saveEval = (data) => {
+    return axios.post(API_URL_SAVE, data);
+};
 
 const UploadService = {
     uploadVideo,
     uploadImage,
     getAdditionalDataVideo,
-    getAdditionalDataImage
+    getAdditionalDataImage,
+    saveEval
 };
 
 export default UploadService;

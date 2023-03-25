@@ -1,17 +1,14 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import React, {useContext} from "react";
+import {MapContainer, TileLayer, Marker, useMap, useMapEvents} from "react-leaflet";
+import React, {useContext, useMemo, useRef} from "react";
 import "leaflet/dist/leaflet.css";
 import icon from "../../../../../icons/marker.png";
 import L from "leaflet";
 import NetContext from "../../../../context/NetContext";
 
 export default function MapGetCoordinate() {
-    const netContext = useContext(NetContext);
-    const { latitude, longitude } = netContext.coords;
-    console.log(latitude);
-    console.log(longitude);
-    // console.log(longitude );
-    // const { lat, long } = coords;
+    const netContext = useContext(NetContext)
+    const position = netContext.position
+    const markerRef = useRef(null)
 
     const customIcon = new L.Icon({
         iconUrl: icon,
@@ -21,31 +18,73 @@ export default function MapGetCoordinate() {
 
     function MapView() {
         let map = useMap();
-        map.setView([latitude, longitude], map.getZoom());
-
+        map.setView(position, map.getZoom());
         return null;
     }
 
+    function LocationMarker() {
+        const map = useMapEvents({
+            dblclick() {
+                map.locate().on('locationfound', function(e){
+                    netContext.setPosition(e.latlng)
+                    map.flyTo(e.latlng, map.getZoom())
+                })
+            },
+        })
+
+        return  <Marker icon={customIcon}
+                        position={position}
+                        draggable={true}
+                        eventHandlers={handleChangeCords}
+                        ref={markerRef}/>
+
+    }
+
+    const handleChangeCords = useMemo(
+        () => ({
+            dragend() {
+                const marker = markerRef.current
+                if (marker != null) {
+                    netContext.setPosition(marker.getLatLng())
+                    console.log(position)
+                }
+            },
+        }),
+        [netContext, position],
+    )
+
     return (
-        <div className="row">
-            <div className="col-md-2"/>
-            <MapContainer
-                className="col-md-8 map-net"
-                center={[latitude, longitude]}
-                zoom={5}
-                scrollWheelZoom={true}
-            >
-                <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>
+        <>
+            <div className="row">
+                <div className="col text-center">
+                    <div><small className='text-uppercase font-weight-bold text-danger'>set right location on map for data saving</small></div>
+                    <div><small className='text-uppercase font-weight-bold text-danger'>double click will bring marker to your current location </small></div>
+                    <p/>
+                    <div><small className='text-uppercase font-weight-bold'>position:</small></div>
+                    <div><small className='text-uppercase font-weight-bold'>lat {position['lat']}</small></div>
+                    <div><small className='text-uppercase font-weight-bold'>lng {position['lng']} </small></div>
+                    <p/>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-md-1"/>
+                <MapContainer
+                    className="col-md-10 map-net"
+                    center={position}
+                    zoom={5}
+                    scrollWheelZoom={true}
+                >
+                    <TileLayer
+                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>
                                  contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker icon={customIcon} position={[latitude, longitude]}>
-                    <Popup>{'display_name'}</Popup>
-                </Marker>
-                <MapView/>
-            </MapContainer>
-            <div className="col-md-2"/>
-        </div>
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <LocationMarker/>
+                    <MapView/>
+                </MapContainer>
+                <div className="col-md-1"/>
+            </div>
+        </>
     );
 }

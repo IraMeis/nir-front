@@ -2,5 +2,6 @@
   "runIMG" : "/api/image/run",
   "runVI" : "/api/video/run",
   "evalVI" : "/api/video/eval",
-  "evalIMG" : "/api/image/eval"
+  "evalIMG" : "/api/image/eval",
+  "save": "/api/save"
 }
