@@ -3,5 +3,6 @@
   "runVI" : "/api/video/run",
   "evalVI" : "/api/video/eval",
   "evalIMG" : "/api/image/eval",
-  "save": "/api/save"
+  "save": "/api/save",
+  "getEvals": "/api/getEvals"
 }

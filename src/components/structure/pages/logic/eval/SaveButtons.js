@@ -20,6 +20,10 @@ export default function SaveButtons ()  {
                         coords: position,
                         type: netContext.fileType === fileT.video ? 'video' : 'image'
                     })
+                    .then(()=> {
+                        modalContext.setInfoMess(['OK', 'Data saved'])
+                        modalContext.handleShowModalInfo();
+                    })
                     .catch((err) => {
                         console.log(err);
                         modalContext.setInfoMess(['Something went wrong', err.message]);
