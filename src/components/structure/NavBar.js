@@ -6,7 +6,7 @@ const NavBar = () => {
 
         <Link to={"/"}
               className="navbar-brand">
-            NirProject
+            RDDProject
         </Link>
 
         <div className="navbar-nav mr-auto">

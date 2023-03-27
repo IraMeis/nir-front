@@ -21,7 +21,7 @@ export default function SaveButtons ()  {
                         type: netContext.fileType === fileT.video ? 'video' : 'image'
                     })
                     .then(()=> {
-                        modalContext.setInfoMess(['OK', 'Data saved'])
+                        modalContext.setInfoMess(['OK', 'Data was saved'])
                         modalContext.handleShowModalInfo();
                     })
                     .catch((err) => {
